@@ -18,11 +18,19 @@ I analyzed historical Cyclistic bike-share data to understand how casual riders 
 
 •	Casual riders take trips 3× longer than members (38.3 vs. 11.4 minutes)
 
+![](case_study1_images/Sheet_1.png)
+
 •	Members ride primarily on weekdays during commute hours
 
-•	Casual riders peak on weekends and afternoons
+![](case_study1_images/Sheet_2.png)
+
+•	Hourly Usage Patterns by User Type
+
+![](case_study1_images/Sheet_3.png)
 
 •	Casual riders favor tourist and leisure stations, members favor transit hubs
+
+![](case_study1_images/Sheet_6.png)
 
 **Recommendations**
 
