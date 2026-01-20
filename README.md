@@ -34,13 +34,14 @@ I analyzed historical Cyclistic bike-share data to understand how casual riders 
 
 **Recommendations**
 
-•	Introduce weekend-only or seasonal memberships
+•	Introduce weekend-only or seasonal memberships becasue Casual riders peak on weekends, there is lowers commitment barrier and aligns with leisure-focused usage
 
-•	Promote annual membership as cost-effective for longer rides
+•	Promote annual membership as cost-effective for longer rides becasue casual riders take significantly longer trips
 
-•	Target digital ads at leisure stations during peak casual hours
+•	Target digital ads at high traffic leisure stations during peak casual hours which is between 3PM – 5PM and on weekends
+
 
 **Skills Demonstrated**
 
-Data cleaning, feature engineering, exploratory analysis, visualization, and business-driven storytelling.
+Data cleaning, feature engineering, exploratory analysis, visualization and business-driven storytelling.
 
