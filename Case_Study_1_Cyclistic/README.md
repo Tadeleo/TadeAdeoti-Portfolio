@@ -40,6 +40,14 @@ Cleaned and structured 12 months of trip data (Excel/R), performed trend analysi
 
 ![](images/Sheet_6.png)
 
+•	Annual members exhibit consistent, high-frequency usage during the work week for daily utility, whereas casual riders show a distinct weekend surge, indicating a primary preference for leisure activities.
+
+![](images/Sheet_7.png)
+
+• While casual riders take fewer total trips, their significantly longer average ride lengths suggest that marketing should emphasize the cost-savings of annual memberships for long-duration weekend leisure travel.
+
+![](images/Sheet_8.png)
+
 **Recommendations**
 
 •	Introduce weekend-only or seasonal memberships becasue Casual riders peak on weekends, there is lowers commitment barrier and aligns with leisure-focused usage
