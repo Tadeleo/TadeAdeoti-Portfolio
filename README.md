@@ -4,6 +4,14 @@
 
 I analyzed historical Cyclistic bike-share data to understand how casual riders and annual members use bikes differently and to develop data-driven marketing strategies to convert casual riders into annual members.
 
+**Business Task** 
+
+Increase annual revenue by converting casual riders into long-term members.
+
+**Process**
+
+Cleaned and structured 12 months of trip data (Excel/R), performed trend analysis (R), and created a behavior-mapping dashboard (Tableau).
+
 **Data**
 
 •	Source: Divvy bike-share data (Motivate International Inc.)
