@@ -8,29 +8,29 @@ I analyzed smart device fitness data to unlock new growth opportunities for Bell
 
 **Data Source**
 
-Source: Fitabase Data (Public Domain via Kaggle)
+- Source: Fitabase Data (Public Domain via Kaggle)
 
-Timeframe: March 2016 – May 2016
+- Timeframe: March 2016 – May 2016
 
-Scope: 30+ users tracking heart rate, sleep and activity.
+- Scope: 30+ users tracking heart rate, sleep and activity.
 
-Tools Used:
+**Tools Used:**
 
-SQL (Google BigQuery): Data cleaning, merging multiple datasets (UNION) and feature engineering.
+- SQL (Google BigQuery): Data cleaning, merging multiple datasets (UNION) and feature engineering.
 
-Tableau: Interactive visualizations and trend discovery.
+- Tableau: Interactive visualizations and trend discovery.
 
-Excel: Initial data auditing, pivot table and schema validation.
+- Excel: Initial data auditing, pivot table and schema validation.
 
 **Data Processing (SQL)**
 
-I utilized BigQuery to clean and prepare the dataset for analysis. Key technical steps included:
+- I utilized BigQuery to clean and prepare the dataset for analysis. Key technical steps included:
 
-Standardizing Timestamps: Created regular expressions to validate date/time formats across disparate tables.
+- Standardizing Timestamps: Created regular expressions to validate date/time formats across disparate tables.
 
-Deduplication: Used ROW_NUMBER() window functions to partition by Id and Date to ensure only the most accurate records remained.
+- Deduplication: Used ROW_NUMBER() window functions to partition by Id and Date to ensure only the most accurate records remained.
 
-Merging Datasets: Combined daily activity, hourly steps and weight logs using LEFT JOIN to create a Master_Hourly_Activity table.
+- Merging Datasets: Combined daily activity, hourly steps and weight logs using LEFT JOIN to create a Master_Hourly_Activity table.
 
 [!TIP] View my full SQL cleaning script here: [Link to your /scripts/bellabeat_queries.sql]
 
@@ -49,11 +49,11 @@ By analyzing sleep composition by the hour, I identified that restlessness peaks
 
 Based on the data, I recommend the following three-pillar marketing strategy:
 
-Targeted Sedentary Alerts: Implement smart notifications that recognize when a user has exceeded 60 minutes of sedentary time, encouraging "Micro-Movements."
+- Targeted Sedentary Alerts: Implement smart notifications that recognize when a user has exceeded 60 minutes of sedentary time, encouraging "Micro-Movements."
 
-Personalized Sleep Hygiene: Leverage the "Mid-Week Deficit" data to push Bellabeat Membership content specifically on Thursday and Friday nights to encourage earlier bedtimes.
-
-Morning Restlessness Coaching: Since restlessness peaks at 8 AM, Bellabeat can offer "Gentle Wake" features or morning meditation content to help users transition from sleep to activity more effectively.
+- Personalized Sleep Hygiene: Leverage the "Mid-Week Deficit" data to push Bellabeat Membership content specifically on Thursday and Friday nights to encourage earlier bedtimes.
+  
+- Morning Restlessness Coaching: Since restlessness peaks at 8 AM, Bellabeat can offer "Gentle Wake" features or morning meditation content to help users transition from sleep to activity more effectively.
 
 **Skills Demonstrated**
 Data cleaning, complex SQL joins, window functions, trend visualization, and translating technical data into business strategy
