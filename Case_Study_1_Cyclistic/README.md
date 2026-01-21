@@ -52,5 +52,3 @@ Cleaned and structured 12 months of trip data (Excel/R), performed trend analysi
 **Skills Demonstrated**
 
 Data cleaning, feature engineering, exploratory analysis, visualization and business-driven storytelling.
-
-
