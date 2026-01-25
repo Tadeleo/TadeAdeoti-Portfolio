@@ -20,6 +20,33 @@ This project applies **Bayesian Spatiotemporal Modeling** to analyze crime patte
 * `/output`: Spatiotemporal faceted maps showing annual risk evolution.
 
 ## Visualizations
+### Abuja Crime Intelligence Dashboard (Tableau)
+## Objective
+To transform complex Bayesian model outputs into an interactive, actionable dashboard for law enforcement agencies and policy makers in the FCT, Abuja.
+
+## [View Interactive Dashboard on Tableau Public](#)
+
+## Features
+### 1. Spatiotemporal Risk Grid
+An interactive grid of Abuja maps allowing users to filter by **Year (2012-2021)** and **Crime Type**. 
+* **Functionality:** Uses spatial joins between `.shp` files and cleaned crime CSVs to visualize Relative Risk (RR).
+  
+
+### 2. Temporal Analysis (Time of Crime)
+A specialized view showing the frequency of crimes across 6-hour windows.
+* **Insight:** Highlights the "Midnight to Dawn" vulnerability window across different localities.
+
+### 3. Law Enforcement Efficiency Tracker
+Compares "Cases Reported" vs "Arrests" vs "Convictions" to identify gaps in the judicial pipeline.
+
+## Tableau Workings
+* **Data Modeling:** Implemented a physical join between spatial boundary files and crime datasets on the `LOC_NAME` key.
+* **Calculated Fields:** * `Expected Cases`: `{FIXED : SUM([Cases])} / {FIXED : SUM([Population])} * [Population]`
+    * `Relative Risk`: `SUM([Cases]) / SUM([Expected Cases])`
+* **Design:** Utilized **Magma** color palettes for high-contrast heatmaps and coordinate grid overlays for geographical context.
+
+## Dashboard Preview
+
 ### Spatiotemporal Relative Risk (Homicide and Robbery)
 The faceted maps illustrate how risk intensity shifted from the city center to the suburban fringes over the decade.
 ![Relative Risk Map](https://your-image-link-here.com/faceted_map.png)
