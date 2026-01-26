@@ -29,6 +29,10 @@ To transform complex Bayesian model outputs into an interactive, actionable dash
 ## Features
 ### 1. Spatiotemporal Relative Risk (Homicide and Robbery)
 The faceted maps illustrate how risk intensity shifted from the city center to the suburban fringes over the decade.An interactive grid of Abuja maps allowing users to filter by **Year (2012-2021)** and **Crime Type**. 
+
+**Abuja Metropolis (Area of Interest)** 
+![](images/aoi.png)
+
 * **Functionality:** Uses spatial joins between `.shp` files and cleaned crime CSVs to visualize Relative Risk (RR).
   
 ![](images/Sheet_6.png)
