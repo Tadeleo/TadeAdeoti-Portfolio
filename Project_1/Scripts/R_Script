@@ -1,1 +1,286 @@
 
+# Load libraries
+library(tidyverse)
+
+# 1. Load your csv of year
+setwd("C:\\Users\\hp\\Documents\\Datasets and Methods\\The Project")
+
+library(tidyverse)
+
+# Load data
+df <- read.csv("YearSpatioTemporal.csv")
+
+
+# Aggregate and Plot
+df_temp <- df %>% 
+  group_by(year) %>% 
+  summarize(total_cases = sum(cases_reported))
+
+ggplot(df_temp, aes(x=year, y=total_cases)) +
+  geom_line(size=1.2, color="steelblue") +
+  geom_point(size=3) +
+  theme_minimal() +
+  labs(title="Temporal Trend of Crimes (2012-2021)", x="Year", y="Total Cases")
+
+df_st <- read.csv("Spatio-temporal modeling of areal data.csv")
+
+# Calculate Global Rate
+global_rate <- sum(df_st$cases_reported, na.rm=T) / sum(df_st$population, na.rm=T)
+
+# Calculate RR by Area
+area_risk <- df_st %>%
+  group_by(area) %>%
+  summarize(Observed = sum(cases_reported), Pop = mean(population)) %>%
+  mutate(Expected = Pop * global_rate, 
+         RR = Observed / Expected)
+
+# Plot
+ggplot(area_risk, aes(x=reorder(area, RR), y=RR)) +
+  geom_bar(stat="identity", fill="darkred") +
+  coord_flip() +
+  geom_hline(yintercept=1, linetype="dashed", color="black") +
+  labs(title="Relative Risk of Crime by Area", x="Area", y="Relative Risk (RR)")
+
+df_st %>%
+  group_by(area, year) %>%
+  summarize(Total = sum(cases_reported)) %>%
+  ggplot(aes(x=as.factor(year), y=area, fill=Total)) +
+  geom_tile() +
+  scale_fill_gradient(low="white", high="red") +
+  labs(title="Spatiotemporal Heatmap of Crime", x="Year", y="Area")
+
+# Load necessary libraries
+library(sf)
+library(tidyverse)
+library(viridis)
+
+# SPATIOTEMPORAL ANALYSES
+
+# Load the Spatial Data (Shapefile)
+setwd("C:\\Users\\hp\\Documents\\Datasets and Methods\\localities")
+abuja_map <- st_read("localities.shp") 
+
+plot(abuja_map)
+
+# RELATIVE RISK OF HOMICIDE
+# 1. Load the Homicide Data
+setwd("C:\\Users\\hp\\Documents\\Datasets and Methods\\The Project\\Spatio-temporal modeling of areal data")
+homicide_df <- read.csv("crimedata for Homicide.csv")
+
+# 2. Calculate Global Homicide Rate
+# Expected = Population * (Total Homicides / Total Population)
+total_homicides <- sum(homicide_df$y, na.rm = TRUE)
+total_pop <- sum(homicide_df$n, na.rm = TRUE)
+global_rate <- total_homicides / total_pop
+
+# 3. Aggregate Homicide Data by Locality
+# We calculate RR: Observed / (Population * Global Rate)
+homicide_stats <- homicide_df %>%
+  group_by(LOC_NAME) %>%
+  summarise(
+    Observed = sum(y, na.rm = TRUE),
+    Population = mean(n, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    Expected = Population * global_rate,
+    Relative_Risk = Observed / Expected
+  )
+
+# 4. Join Data to Map
+# Ensure LOC_NAME in CSV matches LOC_NAME in DBF (case sensitivity matters!)
+abuja_map_final <- abuja_map %>%
+  left_join(homicide_stats, by = c("LOC_NAME" = "LOC_NAME"))
+
+
+# 5. Calculate the Global Homicide Rate (across all years and locations)
+# This serves as the baseline for "Expected" cases
+global_rate <- sum(homicide_df$y) / sum(homicide_df$n)
+
+# 6. Calculate Relative Risk (RR) per year per locality
+homicide_rr_year <- homicide_df %>%
+  mutate(
+    Expected = n * global_rate,
+    Relative_Risk = y / Expected
+  ) %>%
+  # Handle cases where Expected might be 0 to avoid infinite values
+  mutate(Relative_Risk = ifelse(is.infinite(Relative_Risk), 0, Relative_Risk))
+
+# 7. Join the data with the Shapefile
+# We use inner_join to ensure we only map areas we have crime data for
+map_data_faceted <- abuja_map %>%
+  inner_join(homicide_rr_year, by = c("LOC_NAME" = "LOC_NAME"))
+
+# Load libraries
+library(sf)
+library(tidyverse)
+library(viridis)
+
+
+# 8. Calculate the Global Homicide Rate
+# Total cases divided by total population across the entire dataset
+global_rate <- sum(homicide_df$y) / sum(homicide_df$n)
+
+# 9. Calculate Relative Risk (RR) per year per locality
+homicide_rr_year <- homicide_df %>%
+  mutate(
+    Expected = n * global_rate,
+    Relative_Risk = y / Expected
+  ) %>%
+  # Clean up any potential division by zero or infinite values
+  mutate(Relative_Risk = ifelse(is.infinite(Relative_Risk) | is.na(Relative_Risk), 0, Relative_Risk))
+
+# 10. Join the data with the Shapefile
+map_data_faceted <- abuja_map %>%
+  inner_join(homicide_rr_year, by = c("LOC_NAME" = "LOC_NAME"))
+
+# 11. Create the Spatiotemporal Faceted Map with Grids
+ggplot(data = map_data_faceted) +
+  # We use theme_bw as a base because it handles panel borders and grids well
+  theme_bw() + 
+  # Draw the map polygons
+  geom_sf(aes(fill = Relative_Risk), color = "white", size = 0.1) +
+  # Separate into maps by year
+  facet_wrap(~year, ncol = 5) + 
+  # Apply the color scale
+  scale_fill_viridis(
+    option = "magma", 
+    name = "Relative Risk",
+    limits = c(0, max(map_data_faceted$Relative_Risk, na.rm = TRUE))
+  ) +
+  # Customizing the Theme to show grids but hide axis labels
+  theme(
+    plot.title = element_text(size = 10,  hjust = 0.5),
+    # Show the grid lines
+    panel.grid.major = element_line(color = "grey90", size = 0.2), 
+    panel.grid.minor = element_line(color = "grey95", size = 0.1),
+    # Hide the coordinate numbers on the axes
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    # Bold the year titles for each grid
+    strip.text = element_text(face = "bold", size = 8),
+    # Adjust legend position
+    legend.position = "bottom",
+    # Add a slight margin around panels
+    panel.spacing = unit(1, "lines")
+  ) +
+  # Ensure the coordinate system draws graticules (the grid lines)
+  coord_sf(datum = st_crs(4326)) + 
+  labs(
+    title = "Spatiotemporal Relative Risk of Homicide",
+  ) +
+  scale_fill_gradient2(
+    midpoint = 1, low = "blue", mid = "lightblue", high = "red"
+  )
+
+# RELATIVE RISK OF ROBBERY
+# 1. Load the Robbery Data
+robbery_df <- read.csv("crimedata for Robbery.csv")
+
+# 2. Calculate Global Robbery Rate
+# Expected = Population * (Total Robbery / Total Population)
+total_robbery <- sum(robbery_df$y, na.rm = TRUE)
+total_pop <- sum(robbery_df$n, na.rm = TRUE)
+global_rate <- total_robbery / total_pop
+
+# 3. Aggregate Robbery Data by Locality
+# We calculate RR: Observed / (Population * Global Rate)
+robbery_stats <- robbery_df %>%
+  group_by(LOC_NAME) %>%
+  summarise(
+    Observed = sum(y, na.rm = TRUE),
+    Population = mean(n, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    Expected = Population * global_rate,
+    Relative_Risk = Observed / Expected
+  )
+
+# 4. Join Data to Map
+# Ensure LOC_NAME in CSV matches LOC_NAME in DBF (case sensitivity matters!)
+abuja_map_final <- abuja_map %>%
+  left_join(robbery_stats, by = c("LOC_NAME" = "LOC_NAME"))
+
+
+# 5. Calculate the Global Homicide Rate (across all years and locations)
+# This serves as the baseline for "Expected" cases
+global_rate <- sum(robbery_df$y) / sum(robbery_df$n)
+
+# 6. Calculate Relative Risk (RR) per year per locality
+robbery_rr_year <- robbery_df %>%
+  mutate(
+    Expected = n * global_rate,
+    Relative_Risk = y / Expected
+  ) %>%
+  # Handle cases where Expected might be 0 to avoid infinite values
+  mutate(Relative_Risk = ifelse(is.infinite(Relative_Risk), 0, Relative_Risk))
+
+# 7. Join the data with the Shapefile
+# We use inner_join to ensure we only map areas we have crime data for
+map_data_faceted <- abuja_map %>%
+  inner_join(robbery_rr_year, by = c("LOC_NAME" = "LOC_NAME"))
+
+# Load libraries
+library(sf)
+library(tidyverse)
+library(viridis)
+
+
+# 8. Calculate the Global Homicide Rate
+# Total cases divided by total population across the entire dataset
+global_rate <- sum(robbery_df$y) / sum(robbery_df$n)
+
+# 9. Calculate Relative Risk (RR) per year per locality
+robbery_rr_year <- robbery_df %>%
+  mutate(
+    Expected = n * global_rate,
+    Relative_Risk = y / Expected
+  ) %>%
+  # Clean up any potential division by zero or infinite values
+  mutate(Relative_Risk = ifelse(is.infinite(Relative_Risk) | is.na(Relative_Risk), 0, Relative_Risk))
+
+# 10. Join the data with the Shapefile
+map_data_faceted <- abuja_map %>%
+  inner_join(robbery_rr_year, by = c("LOC_NAME" = "LOC_NAME"))
+
+# 11. Create the Spatiotemporal Faceted Map with Grids
+ggplot(data = map_data_faceted) +
+  # We use theme_bw as a base because it handles panel borders and grids well
+  theme_bw() + 
+  # Draw the map polygons
+  geom_sf(aes(fill = Relative_Risk), color = "white", size = 0.1) +
+  # Separate into maps by year
+  facet_wrap(~year, ncol = 5) + 
+  # Apply the color scale
+  scale_fill_viridis(
+    option = "magma", 
+    name = "Relative Risk",
+    limits = c(0, max(map_data_faceted$Relative_Risk, na.rm = TRUE))
+  ) +
+  # Customizing the Theme to show grids but hide axis labels
+  theme(
+    plot.title = element_text(size = 10,  hjust = 0.5),
+    # Show the grid lines
+    panel.grid.major = element_line(color = "grey90", size = 0.2), 
+    panel.grid.minor = element_line(color = "grey95", size = 0.1),
+    # Hide the coordinate numbers on the axes
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    # Bold the year titles for each grid
+    strip.text = element_text(face = "bold", size = 8),
+    # Adjust legend position
+    legend.position = "bottom",
+    # Add a slight margin around panels
+    panel.spacing = unit(1, "lines")
+  ) +
+  # Ensure the coordinate system draws graticules (the grid lines)
+  coord_sf(datum = st_crs(4326)) + 
+  labs(
+    title = "Spatiotemporal Relative Risk of Robbery",
+  ) +
+  scale_fill_gradient2(
+    midpoint = 1, low = "blue", mid = "lightblue", high = "red"
+  )
+
+
