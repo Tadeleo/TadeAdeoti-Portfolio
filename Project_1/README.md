@@ -27,29 +27,42 @@ To transform complex Bayesian model outputs into an interactive, actionable dash
 ## [View Interactive Dashboard on Tableau Public](#)
 
 ## Features
-### 1. Spatiotemporal Risk Grid
-An interactive grid of Abuja maps allowing users to filter by **Year (2012-2021)** and **Crime Type**. 
+### 1. Spatiotemporal Relative Risk (Homicide and Robbery)
+The faceted maps illustrate how risk intensity shifted from the city center to the suburban fringes over the decade.An interactive grid of Abuja maps allowing users to filter by **Year (2012-2021)** and **Crime Type**. 
 * **Functionality:** Uses spatial joins between `.shp` files and cleaned crime CSVs to visualize Relative Risk (RR).
   
+![](images/Sheet_6.png)
 
-### 2. Temporal Analysis (Time of Crime)
+![](images/Sheet_7.png)
+
+
+### 2. Temporal Analysis (Time of Crime/Time plot of Crime Incidents)
 A specialized view showing the frequency of crimes across 6-hour windows.
 * **Insight:** Highlights the "Midnight to Dawn" vulnerability window across different localities.
 
-### 3. Law Enforcement Efficiency Tracker
-Compares "Cases Reported" vs "Arrests" vs "Convictions" to identify gaps in the judicial pipeline.
+![](images/Sheet_4.png)
 
-## Tableau Workings
+![](images/Sheet_5.png)
+
+#### Temporal Patterns
+
+![](images/Sheet_1.png)
+
+### 4. Regional Hotspots - Heatmap
+The spatiotemporal heatmap illustrates a progressive surge in Abuja's crime volume over the decade, with Maitama, Lugbe, and Garki consistently identified as the highest-density hotspots for reported incidents
+
+![](images/Sheet_3.png)
+* **Design:** Utilized **Magma** color palettes for high-contrast heatmaps and coordinate grid overlays for geographical context.
+
+## Tableau Workings on Relative Risk
 * **Data Modeling:** Implemented a physical join between spatial boundary files and crime datasets on the `LOC_NAME` key.
 * **Calculated Fields:** * `Expected Cases`: `{FIXED : SUM([Cases])} / {FIXED : SUM([Population])} * [Population]`
     * `Relative Risk`: `SUM([Cases]) / SUM([Expected Cases])`
-* **Design:** Utilized **Magma** color palettes for high-contrast heatmaps and coordinate grid overlays for geographical context.
+      
+![](images/Sheet_2.png)
 
 ## Dashboard Preview
-
-### Spatiotemporal Relative Risk (Homicide and Robbery)
-The faceted maps illustrate how risk intensity shifted from the city center to the suburban fringes over the decade.
-![Relative Risk Map](https://your-image-link-here.com/faceted_map.png)
+https://public.tableau.com/app/profile/olatade.adeoti
 
 ## Technical Paper
 This analysis is based on the research paper: *“Bayesian Analysis of the Nature and Patterns of Crime Risk in Abuja, Nigeria (2012-2021)”* by Adeoti & Ajibade.
