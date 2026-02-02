@@ -1,1 +1,52 @@
+CleanedTotalSales
+WITH CleanedTotalSales AS (
+  SELECT 
+    TRIM(SPLIT(single_item, '(Qty:')[OFFSET(0)]) AS product_name,
+    CAST(REPLACE(SPLIT(single_item, '(Qty:')[OFFSET(1)], ')', '') AS INT64) AS quantity
+  FROM 
+    `tade-bigquery-project.VicPharmSalesList.VicPharmSalesList`,
+    UNNEST(SPLIT(Products, ',')) AS single_item
+)
 
+SELECT 
+  product_name, 
+  SUM(quantity) AS total_sold
+FROM CleanedTotalSales
+GROUP BY product_name
+ORDER BY total_sold DESC;
+
+
+CleanedProductSales
+WITH CleanedProductSales AS (
+  SELECT 
+    `Order ID` AS Order_ID,
+    `Customer Name`,
+    `Payment Mode`,
+    `Date & time`,
+    `Due Date`,
+    -- Extract product name
+    TRIM(SPLIT(single_item, '(Qty:')[OFFSET(0)]) AS Product_Name,
+    -- Extract quantity and convert to number
+    CAST(REPLACE(SPLIT(single_item, '(Qty:')[OFFSET(1)], ')', '') AS INT64) AS Quantity
+  FROM 
+    `tade-bigquery-project.VicPharmSalesList.VicPharmSalesList`,
+    -- Flattens the comma-separated products into individual rows
+    UNNEST(SPLIT(Products, ',')) AS single_item
+)
+
+SELECT 
+  Order_ID,
+  `Customer Name`,
+  `Payment Mode`,
+  `Date & time`,
+  `Due Date`,
+  Product_Name, 
+  Quantity 
+FROM CleanedProductSales
+ORDER BY Quantity DESC;
+
+
+  SUM(quantity) AS total_sold
+FROM CleanedTotalSales
+GROUP BY product_name
+ORDER BY total_sold DESC;
