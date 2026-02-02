@@ -1,5 +1,6 @@
-# Google Data Analytics Capstone Case Study 1
-# Cyclistic Bike-Share Analysis
+# Google Data Analytics Capstone Case Study 1 #
+## Cyclistic Bike-Share Analysis ##
+
 **Objective**
 
 I analyzed historical Cyclistic bike-share data to understand how casual riders and annual members use bikes differently and to develop data-driven marketing strategies to convert casual riders into annual members.
