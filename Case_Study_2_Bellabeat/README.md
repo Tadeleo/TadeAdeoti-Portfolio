@@ -1,6 +1,6 @@
-# Bellabeat Wellness Technology Analysis
+# Google Data Analytics Capstone Case Study #
 
-# Google Data Analytics Capstone Case Study
+## Bellabeat Wellness Technology Analysis ## 
 
 **Objective**
 
