@@ -173,7 +173,7 @@ a.	Displays the proportion of paid versus unpaid invoices.
 
 b.	Confirms that while most transactions are paid, a small unpaid portion represents outstanding debt.
 
-![](images/Sheet_9.png)
+![](images/Dashboard.png)
 
 **Insight Summary**
 
